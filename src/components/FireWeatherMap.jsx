@@ -29,7 +29,7 @@ function stationsToGeoJson(stations) {
   }
 }
 
-export default function FireWeatherMap({ stations, onSelectStation }) {
+export default function FireWeatherMap({ stations, onSelectStation, onError }) {
   const containerRef = useRef(null)
   const mapRef = useRef(null)
   const stationsRef = useRef(stations)
@@ -37,7 +37,9 @@ export default function FireWeatherMap({ stations, onSelectStation }) {
 
   useEffect(() => {
     if (!mapboxgl.accessToken) {
-      console.error('Missing VITE_MAPBOX_TOKEN — the map cannot render without it.')
+      onError?.(
+        'No Mapbox token configured. Copy .env.example to .env and set VITE_MAPBOX_TOKEN, then restart the dev server.',
+      )
       return
     }
 
@@ -50,6 +52,16 @@ export default function FireWeatherMap({ stations, onSelectStation }) {
       maxZoom: 12,
     })
     mapRef.current = map
+
+    map.on('error', (e) => {
+      const status = e.error?.status
+      const message =
+        status === 401 || status === 403
+          ? 'Mapbox rejected the access token (invalid, expired, or URL-restricted). Check VITE_MAPBOX_TOKEN and your token\'s URL restrictions at account.mapbox.com/access-tokens.'
+          : `Mapbox error: ${e.error?.message ?? 'failed to load map resources.'}`
+      console.error('Mapbox GL error', e.error)
+      onError?.(message)
+    })
 
     map.addControl(new mapboxgl.NavigationControl(), 'top-right')
 

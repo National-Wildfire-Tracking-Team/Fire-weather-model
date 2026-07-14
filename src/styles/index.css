@@ -152,6 +152,22 @@ body {
   color: #15181c;
 }
 
+.map-error-banner {
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #b23c3c;
+  color: white;
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-size: 0.85rem;
+  max-width: 480px;
+  text-align: center;
+  z-index: 2;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
 .ffwi-popup-forecast {
   margin-top: 4px;
   color: #555;

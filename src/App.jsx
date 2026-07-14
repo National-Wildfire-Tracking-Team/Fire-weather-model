@@ -17,6 +17,7 @@ export default function App() {
   const [loading, setLoading] = useState(false)
   const [lastUpdated, setLastUpdated] = useState(null)
   const [selected, setSelected] = useState(null)
+  const [mapError, setMapError] = useState(null)
 
   const loadAll = useCallback(async () => {
     setLoading(true)
@@ -67,8 +68,10 @@ export default function App() {
       </header>
 
       <div className="map-wrap">
-        <FireWeatherMap stations={stations} onSelectStation={setSelected} />
+        <FireWeatherMap stations={stations} onSelectStation={setSelected} onError={setMapError} />
         <Legend />
+
+        {mapError && <div className="map-error-banner">{mapError}</div>}
 
         <div className="status-panel">
           {loading ? (
